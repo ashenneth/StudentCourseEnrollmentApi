@@ -5,6 +5,7 @@ using StudentCourseEnrollmentApi.Repositories.Interfaces;
 using StudentCourseEnrollmentApi.Repositories;
 using StudentCourseEnrollmentApi.Services.Interfaces;
 using StudentCourseEnrollmentApi.Services;
+using StudentCourseEnrollmentApi.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +44,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
 
