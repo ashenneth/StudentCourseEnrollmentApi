@@ -13,11 +13,17 @@ public class StudentsController : ControllerBase
     public StudentsController(IStudentService service) => _service = service;
 
     [HttpGet]
-    public async Task<ActionResult<List<StudentResponseDto>>> GetAll()
+    [HttpGet]
+    public async Task<ActionResult<PagedResult<StudentResponseDto>>> GetAll(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] bool? isActive = null,
+        [FromQuery] string? search = null)
     {
-        var result = await _service.GetAllAsync();
-        return Ok(result.Data);
+        var result = await _service.GetAllAsync(page, pageSize, isActive, search);
+        return ToActionResult(result);
     }
+
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<StudentResponseDto>> GetById(int id)

@@ -11,12 +11,28 @@ public class StudentService : IStudentService
     private readonly IStudentRepository _repo;
     public StudentService(IStudentRepository repo) => _repo = repo;
 
-    public async Task<ServiceResult<List<StudentResponseDto>>> GetAllAsync()
+    public async Task<ServiceResult<PagedResult<StudentResponseDto>>> GetAllAsync(
+        int page = 1,
+        int pageSize = 10,
+        bool? isActive = null,
+        string? search = null)
     {
-        var students = await _repo.GetAllAsync();
-        var data = students.Select(MapToResponse).ToList();
-        return ServiceResult<List<StudentResponseDto>>.Ok(data);
+        if (page < 1) return ServiceResult<PagedResult<StudentResponseDto>>.BadRequest("page must be >= 1");
+        if (pageSize < 1 || pageSize > 100) return ServiceResult<PagedResult<StudentResponseDto>>.BadRequest("pageSize must be between 1 and 100");
+
+        var paged = await _repo.GetPagedAsync(page, pageSize, isActive, search);
+
+        var dtoPaged = new PagedResult<StudentResponseDto>
+        {
+            Items = paged.Items.Select(MapToResponse).ToList(),
+            Page = paged.Page,
+            PageSize = paged.PageSize,
+            TotalCount = paged.TotalCount
+        };
+
+        return ServiceResult<PagedResult<StudentResponseDto>>.Ok(dtoPaged);
     }
+
 
     public async Task<ServiceResult<StudentResponseDto>> GetByIdAsync(int id)
     {
