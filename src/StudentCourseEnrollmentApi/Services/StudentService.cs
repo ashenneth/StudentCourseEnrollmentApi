@@ -12,10 +12,10 @@ public class StudentService : IStudentService
     public StudentService(IStudentRepository repo) => _repo = repo;
 
     public async Task<ServiceResult<PagedResult<StudentResponseDto>>> GetAllAsync(
-        int page = 1,
-        int pageSize = 10,
-        bool? isActive = null,
-        string? search = null)
+        int page,
+        int pageSize,
+        bool? isActive,
+        string? search)
     {
         if (page < 1) return ServiceResult<PagedResult<StudentResponseDto>>.BadRequest("page must be >= 1");
         if (pageSize < 1 || pageSize > 100) return ServiceResult<PagedResult<StudentResponseDto>>.BadRequest("pageSize must be between 1 and 100");
