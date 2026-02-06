@@ -13,7 +13,6 @@ public class StudentsController : ControllerBase
     public StudentsController(IStudentService service) => _service = service;
 
     [HttpGet]
-    [HttpGet]
     public async Task<ActionResult<PagedResult<StudentResponseDto>>> GetAll(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
